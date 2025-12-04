@@ -23,6 +23,7 @@
         c (count s)]
     (->>
      (range 1 (inc (quot c 2)))
+     (filter #(zero? (mod c %)))
      ;(map #(partition-all % s))
      (map #(apply = (partition-all % s)))
      (some true?)
@@ -51,6 +52,20 @@
   (invalid2? 2121212118)
   
   (first (parse puzzle))
+  (apply max (mapcat #(map (comp count str) %) (parse input)))
+
+  (time
+  (let [candidates
+        (set (mapcat (fn [n] (let [c (str n)
+                              s (count c)]
+                          (->> (range 2 (inc (quot 10 s)))
+                               (map (fn [a] (Long/parseLong (apply str (repeat a c))))))))
+                (range 1 100000)))]
+    (reduce +
+            (mapcat (fn [[a b]] (filter #(<= a % b) candidates)) (parse input))
+             )
+    )
+  )
 
   (time (part1 (parse puzzle)))
   (part2 (parse puzzle))
@@ -58,6 +73,6 @@
   )
 
   (submit 2025 2 1 (time (part1 (parse input))))
-  (submit 2025 2 2 (part2 (parse input)))
+  (submit 2025 2 2 (time (part2 (parse input))))
   
   )
