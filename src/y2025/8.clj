@@ -31,7 +31,6 @@
      #{x y})))
 
 (defn circuits [current p c]
-  ;(println current)
   (loop [remaining current
          match     nil
          res       []]
@@ -43,17 +42,12 @@
         (if (or (contains? circuit p)
                 (contains? circuit c))
           (if match
-            ;; 2 dans 2 groupes
+            ;; 2 dans 2 groupes - union
             (conj (into res (rest remaining)) (s/union match circuit))
             (recur (rest remaining) circuit res))
           (recur (rest remaining) match (conj res circuit))))
 
-; 1 dans 1 groupe
-      ; 2 dans 2 groupes
-      ;(if (or (contains? circuit p)
-      ;        (contains? circuit c))
-      ;  (conj (into res (rest remaining)) (conj circuit p c))
-      ;(recur (rest remaining) (conj res circuit)))
+      ;; utile uniquement si on initialise avec [] comme en part 1
       (if match
         ;; 1 dans 1 groupe
         (conj res (conj match p c))
